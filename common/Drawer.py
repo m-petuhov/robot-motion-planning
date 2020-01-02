@@ -1,5 +1,4 @@
 import pygame
-from pygame.locals import *
 from enum import Enum
 
 
@@ -11,15 +10,20 @@ class Colors(Enum):
 
 
 class Drawer(object):
-    def __init__(self, size):
+    def __init__(self, size, title=''):
         self.size = size
         pygame.init()
         self.screen = pygame.display.set_mode([self.size, self.size])
-        self._setup_field()
+        self._setup_field(title)
 
-    def _setup_field(self):
+    @staticmethod
+    def _update():
+        pygame.event.get()
+        pygame.display.update()
+
+    def _setup_field(self, title):
         self.screen.fill(Colors.FIELD_BACKGROUND_COLOR.value)
-        pygame.display.set_caption('Rapidly Exploring Random Tree')
+        pygame.display.set_caption(title)
         self._update()
 
     def draw_circle(self, circle):
@@ -28,24 +32,3 @@ class Drawer(object):
     def draw_line(self, p1, p2, line_color=Colors.LINES_COLOR):
         pygame.draw.line(self.screen, line_color.value, p1, p2)
         self._update()
-
-    @staticmethod
-    def _update():
-        pygame.event.get()
-        pygame.display.update()
-
-
-if __name__ == "__main__":
-    # drawer = Drawer(1000)
-    # drawer.draw_line((0, 0), (100, 100))
-    pygame.init()
-    clock = pygame.time.Clock()
-    screen = pygame.display.set_mode((500, 500))
-    screen.fill(Colors.FIELD_BACKGROUND_COLOR.value)
-    pygame.display.set_caption('Rapidly Exploring Random Tree')
-
-    while True:
-
-        pygame.display.update()
-        # clock.tick(10000)
-
