@@ -25,23 +25,23 @@ def line_intersects_circle(ax, ay, bx, by, cx, cy, r):
     bx -= cx
     by -= cy
     a = math.pow(bx - ax, 2) + math.pow(by - ay, 2)
-    b = 2*(ax*(bx - ax) + ay*(by - ay))
+    b = 2 * (ax * (bx - ax) + ay * (by - ay))
     c = math.pow(ax, 2) + math.pow(ay, 2) - math.pow(r, 2)
-    disc = math.pow(b, 2) - 4*a*c
+    disc = math.pow(b, 2) - 4 * a * c
 
-    if(disc <= 0):
+    if (disc <= 0):
         return False
     sqrtdisc = math.sqrt(disc)
-    t1 = (-b + sqrtdisc)/(2*a)
-    t2 = (-b - sqrtdisc)/(2*a)
-    if((0 < t1 and t1 < 1) or (0 < t2 and t2 < 1)):
+    t1 = (-b + sqrtdisc) / (2 * a)
+    t2 = (-b - sqrtdisc) / (2 * a)
+    if (0 < t1 < 1) or (0 < t2 < 1):
         return True
     return False
 
 
 def collides_line(start_point, finish_point, circles):
     for circle in circles:
-        if line_intersects_circle(start_point[0], start_point[1], finish_point[0], finish_point[1], circle['X'], circle['Y'], circle['R']):
+        if line_intersects_circle(start_point[0], start_point[1], finish_point[0], finish_point[1], circle.x, circle.y, circle.r):
             return True
 
     return False
@@ -83,11 +83,11 @@ class RRTScheduler:
         screen.fill([201, 211, 255])
         pygame.display.set_caption('Rapidly Exploring Random Tree')
 
-        for circle in self.data.get_circles():
-            circle['X'] *= self.dim
-            circle['Y'] *= self.dim
-            circle['R'] *= self.dim
-            pygame.draw.circle(screen, [68, 57, 47], (int(circle['X']), int(circle['Y'])), int(circle['R']))
+        for circle in self.data.circles:
+            circle.x *= self.dim
+            circle.y *= self.dim
+            circle.r *= self.dim
+            pygame.draw.circle(screen, [68, 57, 47], (int(circle.x), int(circle.y)), int(circle.r))
 
         while True:
             if current_state == 'goalFound':
@@ -104,11 +104,11 @@ class RRTScheduler:
                     for p in nodes:
                         if dist(p.point, rand) <= dist(parent_node.point, rand):
                             new_point = step_from_to(p.point, rand, self.epsilon)
-                            if not collides_line(p.point, new_point, self.data.get_circles()):
+                            if not collides_line(p.point, new_point, self.data.circles):
                                 parent_node = p
 
                     new_node = step_from_to(parent_node.point, rand, self.epsilon)
-                    if not collides_line(parent_node.point, new_node, self.data.get_circles()):
+                    if not collides_line(parent_node.point, new_node, self.data.circles):
                         nodes.append(Node(new_node, parent_node))
                         pygame.draw.line(screen, [0, 0, 255], parent_node.point, new_node)
                     else:
@@ -124,6 +124,7 @@ class RRTScheduler:
 
             pygame.display.update()
             clock.tick(10000)
+
 
 if __name__ == "__main__":
     trivial = Parser('Data/mess.json')
