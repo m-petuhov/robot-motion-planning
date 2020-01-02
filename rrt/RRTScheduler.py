@@ -1,20 +1,17 @@
-import pygame
 import random
 import math
-import sys
 
-from Parser import Parser
-from pygame.locals import *
+from common.Parser import Parser
+from common.Drawer import Drawer, Colors
 
 
-# Helper functions
 def dist(p1, p2):
     return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
 
 def collides_point(point, circles):
     for circle in circles:
-        if dist(point, [circle['X'], circle['Y']]) <= circle['R']:
+        if dist(point, [circle.x, circle.y]) <= circle.r:
             return True
     return False
 
@@ -29,11 +26,11 @@ def line_intersects_circle(ax, ay, bx, by, cx, cy, r):
     c = math.pow(ax, 2) + math.pow(ay, 2) - math.pow(r, 2)
     disc = math.pow(b, 2) - 4 * a * c
 
-    if (disc <= 0):
+    if disc <= 0:
         return False
-    sqrtdisc = math.sqrt(disc)
-    t1 = (-b + sqrtdisc) / (2 * a)
-    t2 = (-b - sqrtdisc) / (2 * a)
+    sqrt_disc = math.sqrt(disc)
+    t1 = (-b + sqrt_disc) / (2 * a)
+    t2 = (-b - sqrt_disc) / (2 * a)
     if (0 < t1 < 1) or (0 < t2 < 1):
         return True
     return False
@@ -66,35 +63,30 @@ class Node:
 class RRTScheduler:
     def __init__(self, data, max_nodes, epsilon):
         self.data = data
-        self.dim = 500
         self.max_nodes = max_nodes
         self.epsilon = epsilon
+        self.dim = 500
+        self.drawer = Drawer(self.dim)
 
     def fit(self):
-        pygame.init()
-        clock = pygame.time.Clock()
-        screen = pygame.display.set_mode([self.dim, self.dim])
         start_point = Node((0, 0), None)
         finish_point = Node((self.dim, self.dim), None)
         current_state = 'buildTree'
         count = 0
         nodes = [start_point]
 
-        screen.fill([201, 211, 255])
-        pygame.display.set_caption('Rapidly Exploring Random Tree')
-
         for circle in self.data.circles:
             circle.x *= self.dim
             circle.y *= self.dim
             circle.r *= self.dim
-            pygame.draw.circle(screen, [68, 57, 47], (int(circle.x), int(circle.y)), int(circle.r))
+            self.drawer.draw_circle(circle)
 
         while True:
             if current_state == 'goalFound':
                 current_node = finish_point.parent
 
                 while current_node.parent is not None:
-                    pygame.draw.line(screen, [255, 0, 0], current_node.point, current_node.parent.point)
+                    self.drawer.draw_line(current_node.point, current_node.parent.point, Colors.SHORTEST_PATH_COLOR)
                     current_node = current_node.parent
             else:
                 count = count + 1
@@ -110,7 +102,7 @@ class RRTScheduler:
                     new_node = step_from_to(parent_node.point, rand, self.epsilon)
                     if not collides_line(parent_node.point, new_node, self.data.circles):
                         nodes.append(Node(new_node, parent_node))
-                        pygame.draw.line(screen, [0, 0, 255], parent_node.point, new_node)
+                        self.drawer.draw_line(parent_node.point, new_node)
                     else:
                         count -= 1
 
@@ -118,15 +110,8 @@ class RRTScheduler:
                         current_state = 'goalFound'
                         finish_point = nodes[len(nodes) - 1]
 
-            for e in pygame.event.get():
-                if e.type == QUIT or (e.type == KEYUP and e.key == K_ESCAPE):
-                    sys.exit("Exiting")
-
-            pygame.display.update()
-            clock.tick(10000)
-
 
 if __name__ == "__main__":
-    trivial = Parser('Data/mess.json')
+    trivial = Parser('data/mess.json')
     scheduler = RRTScheduler(trivial, 5000, 10)
     scheduler.fit()
