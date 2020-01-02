@@ -1,5 +1,5 @@
-from common.Parser import Parser
-from rrt.RRTScheduler import RRTScheduler
+from common.parser import Parser
+from rrt.rrt_scheduler import RRTScheduler
 
 if __name__ == "__main__":
     trivial = Parser('data/gigant.json')

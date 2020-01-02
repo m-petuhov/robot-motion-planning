@@ -1,7 +1,7 @@
 import random
 
-from common.Drawer import *
-from common.Helpers import *
+from common.drawer import *
+from common.common_functions import *
 
 
 def get_random_point(x_dim, y_dim):
