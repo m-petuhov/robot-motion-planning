@@ -74,7 +74,7 @@ class RRTScheduler:
             if self.drawer.check_exit():
                 break
 
-    def path_reduction(self):
+    def build_shortest_path(self):
         self.drawer._setup_field('Path reduction')
 
         for circle in self.data.circles:

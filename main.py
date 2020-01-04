@@ -5,4 +5,4 @@ if __name__ == "__main__":
     data = Parser('data/cheese.json')
     scheduler = RRTScheduler(data, 50000, 10)
     scheduler.fit()
-    scheduler.path_reduction()
+    scheduler.build_shortest_path()

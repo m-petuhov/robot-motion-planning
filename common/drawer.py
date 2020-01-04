@@ -14,7 +14,6 @@ class Colors(Enum):
 
 class Drawer(object):
     def __init__(self, size, title=''):
-        self.fpsClock = pygame.time.Clock()
         self.size = size
         pygame.init()
         self.screen = pygame.display.set_mode([self.size, self.size])
@@ -41,6 +40,6 @@ class Drawer(object):
         for e in pygame.event.get():
             if e.type == QUIT or (e.type == KEYUP and e.key == K_ESCAPE):
                 return True
-        self.fpsClock.tick(10000)
+        self._update()
 
         return False
