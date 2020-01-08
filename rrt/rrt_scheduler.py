@@ -23,8 +23,7 @@ class RRTScheduler:
         self.epsilon = epsilon
         self.dim = 500
         self.drawer = Drawer(self.dim, 'Rapidly Exploring Random Tree')
-        self.path_end = None
-        self.path_start = None
+        self.path = []
 
     def fit(self):
         start_point = Node((0, 0), None)
@@ -41,18 +40,20 @@ class RRTScheduler:
 
         while True:
             if finish_flag:
-                self.path_end = finish_point
                 current_node = finish_point
+                self.path.append(current_node.point)
 
                 while current_node.parent is not None:
                     self.drawer.draw_line(current_node.point, current_node.parent.point, Colors.SHORTEST_PATH_COLOR)
                     current_node = current_node.parent
+                    self.path.append(current_node.point)
 
-                self.path_start = current_node
+                self.path.reverse()
                 break
             elif count < self.max_nodes:
                 rand = get_random_point(self.dim, self.dim)
                 parent_node = nodes[0]
+
                 for p in nodes:
                     if dist(p.point, rand) <= dist(parent_node.point, rand):
                         new_point = step_from_to(p.point, rand, self.epsilon)
@@ -69,31 +70,6 @@ class RRTScheduler:
                     finish_point.parent = Node(new_node, parent_node)
                     self.drawer.draw_line(finish_point.point, new_node)
                     finish_flag = True
-
-        while True:
-            if self.drawer.check_exit():
-                break
-
-    def build_shortest_path(self):
-        for circle in self.data.circles:
-            self.drawer.draw_circle(circle)
-
-        current = self.path_end
-        while current.parent is not None:
-            self.drawer.draw_line(current.point, current.parent.point, Colors.SHORTEST_PATH_COLOR)
-            current = current.parent
-
-        start = self.path_start
-        end = self.path_end
-        current = end
-        while start is not end:
-            if not collision_check(start.point, current.point, self.data.circles):
-                self.drawer.draw_line(start.point, current.point, Colors.REDUCTION_PATH_COLOR)
-                current.parent = start
-                start = current
-                current = end
-            else:
-                current = current.parent
 
         while True:
             if self.drawer.check_exit():

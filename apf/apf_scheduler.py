@@ -85,6 +85,11 @@ class APFScheduler:
             current_position = new_position
             iters += 1
 
+            if not collides_line(new_position, self.goal, self.data.circles):
+                self.drawer.draw_line(new_position, self.goal, Colors.SHORTEST_PATH_COLOR)
+                self.path.append(self.goal)
+                break
+
         while True:
             if self.drawer.check_exit():
                 break

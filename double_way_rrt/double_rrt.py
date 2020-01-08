@@ -19,8 +19,7 @@ class DoubleRRT:
         self.dim = 500
         self.drawer = Drawer(self.dim, 'Two Rapidly Exploring Random Trees')
         self.epsilon = epsilon
-        self.path_start = Node((0, 0), None)
-        self.path_end = Node((self.dim, self.dim), None)
+        self.path = []
 
         self._configure_environment()
 
@@ -50,8 +49,8 @@ class DoubleRRT:
                 return
 
     def build_path(self):
-        tree_1 = [self.path_start]
-        tree_2 = [self.path_end]
+        tree_1 = [Node((0, 0), None)]
+        tree_2 = [Node((self.dim, self.dim), None)]
 
         did_bridge_trees = False
 
@@ -65,6 +64,19 @@ class DoubleRRT:
                 self._draw_path_to_root(tree_1[-1])
                 self._draw_path_to_root(closest_node)
                 did_bridge_trees = True
+
+                node = tree_1[-1]
+                self.path.append(node.point)
+                while node.parent is not None:
+                    node = node.parent
+                    self.path.append(node.point)
+
+                node = closest_node
+                self.path.reverse()
+                self.path.append(node.point)
+                while node.parent is not None:
+                    node = node.parent
+                    self.path.append(node.point)
             else:
                 # swap trees for the next iteration
                 tree_1, tree_2 = tree_2, tree_1
