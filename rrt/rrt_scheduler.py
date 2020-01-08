@@ -56,16 +56,16 @@ class RRTScheduler:
                 for p in nodes:
                     if dist(p.point, rand) <= dist(parent_node.point, rand):
                         new_point = step_from_to(p.point, rand, self.epsilon)
-                        if not collides_line(p.point, new_point, self.data.circles):
+                        if not collision_check(p.point, new_point, self.data.circles):
                             parent_node = p
 
                 new_node = step_from_to(parent_node.point, rand, self.epsilon)
-                if not collides_line(parent_node.point, new_node, self.data.circles):
+                if not collision_check(parent_node.point, new_node, self.data.circles):
                     nodes.append(Node(new_node, parent_node))
                     self.drawer.draw_line(parent_node.point, new_node)
                     count = count + 1
 
-                if not collides_line(new_node, finish_point.point, self.data.circles):
+                if not collision_check(new_node, finish_point.point, self.data.circles):
                     finish_point.parent = Node(new_node, parent_node)
                     self.drawer.draw_line(finish_point.point, new_node)
                     finish_flag = True
@@ -75,8 +75,6 @@ class RRTScheduler:
                 break
 
     def build_shortest_path(self):
-        self.drawer._setup_field('Path reduction')
-
         for circle in self.data.circles:
             self.drawer.draw_circle(circle)
 
@@ -89,7 +87,7 @@ class RRTScheduler:
         end = self.path_end
         current = end
         while start is not end:
-            if not collides_line(start.point, current.point, self.data.circles):
+            if not collision_check(start.point, current.point, self.data.circles):
                 self.drawer.draw_line(start.point, current.point, Colors.REDUCTION_PATH_COLOR)
                 current.parent = start
                 start = current
