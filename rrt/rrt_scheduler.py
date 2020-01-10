@@ -25,7 +25,7 @@ class RRTScheduler:
         self.drawer = Drawer(self.dim, 'Rapidly Exploring Random Tree')
         self.path = []
 
-    def fit(self):
+    def build_path(self):
         start_point = Node((0, 0), None)
         finish_point = Node((self.dim, self.dim), None)
         finish_flag = False

@@ -2,7 +2,7 @@ from common.common_functions import collision_check
 from common.drawer import *
 
 
-class Smooth:
+class TrajectoryBuilder:
     """Smooth implementing different algorithms.
 
     Parameters
@@ -45,3 +45,11 @@ class Smooth:
         while True:
             if self.drawer.check_exit():
                 break
+
+    def smoothing(self):
+        x = [0]
+        y = [0]
+        v_x = [0]
+        v_y = [0]
+        f_x = []
+        f_y = []
