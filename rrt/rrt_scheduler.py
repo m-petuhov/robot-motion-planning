@@ -23,14 +23,15 @@ class RRTScheduler:
         self.epsilon = epsilon
         self.dim = 500
         self.drawer = Drawer(self.dim, 'Rapidly Exploring Random Tree')
+        self.path_start = Node((0, 0), None)
+        self.path_end = Node((self.dim, self.dim), None)
         self.path = []
 
     def build_path(self):
-        start_point = Node((0, 0), None)
-        finish_point = Node((self.dim, self.dim), None)
+        finish_point = self.path_end
         finish_flag = False
         count = 0
-        nodes = [start_point]
+        nodes = [self.path_start]
 
         for circle in self.data.circles:
             circle.x *= self.dim
