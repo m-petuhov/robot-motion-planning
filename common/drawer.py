@@ -29,8 +29,8 @@ class Drawer(object):
         pygame.display.set_caption(title)
         self._update()
 
-    def draw_circle(self, circle):
-        pygame.draw.circle(self.screen, Colors.OBSTACLE_COLOR.value, (int(circle.x), int(circle.y)), int(circle.r))
+    def draw_circle(self, circle, line_color=Colors.OBSTACLE_COLOR):
+        pygame.draw.circle(self.screen, line_color.value, (int(circle.x), int(circle.y)), int(circle.r))
 
     def draw_line(self, p1, p2, line_color=Colors.LINES_COLOR):
         pygame.draw.line(self.screen, line_color.value, p1, p2)
