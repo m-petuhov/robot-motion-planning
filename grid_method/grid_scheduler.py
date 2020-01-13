@@ -18,6 +18,7 @@ class GridScheduler:
         self._configure_environment()
 
         self.visibility_graph = self._build_visibility_graph()
+        self.path = []
         # self._draw_graph()
 
     def _configure_environment(self):
@@ -73,20 +74,22 @@ class GridScheduler:
         closest_to_end = self.visibility_graph.get_closest_node(self.end)
 
         result, _ = a_star_search(self.visibility_graph, closest_to_start, closest_to_end)
-        path = [self.end, self.visibility_graph.nodes[closest_to_end]]
+        self.path = [self.end, self.visibility_graph.nodes[closest_to_end]]
 
         if closest_to_end in result.keys():
             current_node = result[closest_to_end]
             while current_node is not None:
-                path.append(self.visibility_graph.nodes[current_node])
+                self.path.append(self.visibility_graph.nodes[current_node])
                 current_node = result[current_node]
-            path.append(self.start)
+            self.path.append(self.start)
 
-            for (index, point) in enumerate(path[:-1]):
-                p1, p2 = point, path[index + 1]
+            for (index, point) in enumerate(self.path[:-1]):
+                p1, p2 = point, self.path[index + 1]
                 self.drawer.draw_line(p1, p2, Colors.SHORTEST_PATH_COLOR)
         else:
             print("Goal is unreachable")
+
+        self.path.reverse()
 
         while True:
             if self.drawer.check_exit():

@@ -1,5 +1,6 @@
 from common.parser import Parser
 from trajectory_builder import TrajectoryBuilder
+from grid_method.grid_scheduler import *
 
 
 def write_answer(name, forces):
@@ -22,7 +23,6 @@ def check_answer(dt, forces):
 
     return coordinates
 
-from grid_method.grid_scheduler import *
 
 if __name__ == "__main__":
     data = Parser('data/bumps.json')
