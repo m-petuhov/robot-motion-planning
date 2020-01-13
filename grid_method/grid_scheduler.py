@@ -18,6 +18,7 @@ class GridScheduler:
         self._configure_environment()
 
         self.visibility_graph = self._build_visibility_graph()
+        # self._draw_graph()
 
     def _configure_environment(self):
         (x, y) = self.start
@@ -30,6 +31,12 @@ class GridScheduler:
             circle.y *= self.dim
             circle.r *= self.dim
             self.drawer.draw_circle(circle)
+
+    def _draw_graph(self):
+        for (i, node) in enumerate(self.visibility_graph.nodes):
+            for (neighbor, _) in self.visibility_graph.neighbors(i):
+                if i < neighbor:
+                    self.drawer.draw_line(node, self.visibility_graph.nodes[neighbor])
 
     def _build_visibility_graph(self, epsilon=0.00001):
         circles = self.data.circles
