@@ -5,7 +5,11 @@ def dist(p1, p2):
     return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
 
-def collides_point(point, circles):
+def point_lies_within_bounds(point, size):
+    return 0 <= point[0] <= size[0] and 0 <= point[1] <= size[1]
+
+
+def point_lies_within_circle(point, circles):
     for circle in circles:
         if dist(point, [circle.x, circle.y]) <= circle.r:
             return True

@@ -1,6 +1,6 @@
 from common.parser import Parser
-from double_way_rrt.double_rrt import DoubleRRT
 from trajectory_builder import TrajectoryBuilder
+from grid_method.grid_scheduler import *
 
 
 def write_answer(name, forces):
@@ -25,9 +25,8 @@ def check_answer(dt, forces):
 
 
 if __name__ == "__main__":
-    data = Parser('data/cheese.json')
-    scheduler = DoubleRRT(data, 10)
-
+    data = Parser('data/bumps.json')
+    scheduler = GridScheduler(data, 500, (0, 0), (1, 1))
     scheduler.build_path()
 
     builder = TrajectoryBuilder(data, scheduler.path)
