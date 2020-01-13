@@ -17,6 +17,7 @@ class VisibilityGraph:
     def _connect_all_neighbours(self):
         for i in range(0, len(self.nodes)):
             for j in range(i+1, len(self.nodes)):
+                print(i, "/", len(self.nodes), " ", j, "/", len(self.nodes))
                 if not collision_check(self.nodes[i], self.nodes[j], self.obstacles):
                     self._connect_nodes(i, j)
 
