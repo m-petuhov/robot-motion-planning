@@ -63,7 +63,7 @@ def get_tangents(circle_a, circle_b):
     # v * n = (r1 -/+ r2) / d,  where v = AB/|AB| = AB/d
     # This is a linear equation in unknown vector n.
 
-    for sign1 in range(-1, 1, 2):
+    for sign1 in [-1, 1]:
         c = (r1 - sign1 * r2) / d
         c_squared = c*c
 
@@ -73,7 +73,7 @@ def get_tangents(circle_a, circle_b):
             continue
         h = math.sqrt(max(0.0, 1.0 - c_squared))
 
-        for sign2 in range(-1, 1, 2):
+        for sign2 in [-1, 1]:
             nx = vx * c - sign2 * h * vy
             ny = vy * c + sign2 * h * vx
 
