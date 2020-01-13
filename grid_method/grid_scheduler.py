@@ -45,15 +45,19 @@ class GridScheduler:
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
 
-                    tangent = [(p1[0] + epsilon, p1[1] + epsilon), (p2[0] + epsilon, p2[1] + epsilon)]
+                    # move points from the surface of the circle
+                    d_epsilon = dx * epsilon
+                    tangent = [(p1[0] + d_epsilon, p1[1] + d_epsilon), (p2[0] - d_epsilon, p2[1] - d_epsilon)]
 
                     for delta in range(1, 3+1):
                         d = delta / 4
                         tangent.append((p1[0] + dx * d, p1[1] + dy * d))
 
-                    for point in tangent:
-                        nodes.append(point)
-                        self.drawer.draw_circle(Circle(point[0], point[1], self.dim / 100), Colors.SHORTEST_PATH_COLOR)
+                    for p in tangent:
+                        size = (self.dim, self.dim)
+                        if point_lies_within_bounds(p, size) and not point_lies_within_circle(p, self.data.circles):
+                            nodes.append(p)
+                            self.drawer.draw_circle(Circle(p[0], p[1], self.dim / 100), Colors.REDUCTION_PATH_COLOR)
 
         return VisibilityGraph(nodes, circles)
 
